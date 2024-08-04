@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "@material-tailwind/react";
+import { HeroSection } from "../components/Hero";
 
 const Home = () => {
   return (
     <>
       <div>
-        <Button>Button</Button>
+        <HeroSection />
       </div>
     </>
   );
