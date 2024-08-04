@@ -1,29 +1,109 @@
-// src/components/Header.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Navbar,
+  Collapse,
+  Typography,
+  IconButton,
+  Avatar,
+} from "@material-tailwind/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import logo from "../assets/W.png";
 import { Link } from "react-router-dom";
 
-const Header = () => (
-  <header className="bg-blue-600 text-white p-4">
-    <div className="container mx-auto flex justify-between items-center">
-      <div className="text-2xl font-bold">
-        <Link to="/">MyApp</Link>
-      </div>
-      <nav>
-        <ul className="flex space-x-4">
-          <li>
-            <Link to="/" className="hover:underline">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className="hover:underline">
-              About
-            </Link>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-);
+function NavList() {
+  const pageList = [
+    {
+      id: 1,
+      label: "Home",
+      pathName: "/",
+    },
+    {
+      id: 2,
+      label: "About us",
+      pathName: "/about",
+    },
+    {
+      id: 3,
+      label: "Contact us",
+      pathName: "/contact-us",
+    },
+    {
+      id: 4,
+      label: "Login",
+      pathName: "/",
+    },
+  ];
 
-export default Header;
+  return (
+    <ul className="my-2 p-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      {pageList.map((data) => (
+        <>
+          <Typography
+            key={data.id}
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-medium"
+          >
+            <Link
+              to={data.pathName}
+              className="flex items-center justify-end text-white transition-colors"
+            >
+              {data.label}
+            </Link>
+          </Typography>
+        </>
+      ))}
+    </ul>
+  );
+}
+
+export function Header() {
+  const [openNav, setOpenNav] = useState(false);
+
+  const handleWindowResize = () => {
+    if (window.innerWidth >= 960) setOpenNav(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+  return (
+    <Navbar className="mx-auto max-w-screen-xl px-6 py-5 sticky top-3 z-50 bg-transparent text-white">
+      <div className="flex items-center justify-between ">
+        <div className=" flex justify-between items-center">
+          <div className=" px-1">
+            <Link>
+              <Avatar src={logo} alt="" />
+            </Link>
+          </div>
+          <div>
+            <p>Kiranravi Dev</p>
+          </div>{" "}
+        </div>
+        <div className="hidden lg:block">
+          <NavList />
+        </div>
+        <IconButton
+          variant="text"
+          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+          ripple={false}
+          onClick={() => setOpenNav(!openNav)}
+        >
+          {openNav ? (
+            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+          ) : (
+            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+          )}
+        </IconButton>
+      </div>
+      <Collapse open={openNav}>
+        <NavList />
+      </Collapse>
+    </Navbar>
+  );
+}
